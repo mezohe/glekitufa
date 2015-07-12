@@ -32,8 +32,8 @@ function camxes_preprocessing(input) {
 	input = input.replace(/ʒ/igm,"j");
 	input = input.replace(/ɛ/gm,"e");
 	input = input.replace(/[Ɛɛ́ɛ̀ɛ̂ɛ̈]/gm,"E");
-        input = input.replace(/ə/igm,"y");
-        input = input.replace(/ŋ/igm,"ng");
+	input = input.replace(/ə/igm,"y");
+	input = input.replace(/ŋ/igm,"ng");
 	// --- //
 	input = input.replace(/([cfkpstx])([bdgjvz])/igm,"$1y$2");
 	input = input.replace(/([bdgjvz])([cfkpstx])/igm,"$1y$2");
@@ -46,7 +46,8 @@ function camxes_preprocessing(input) {
 	}
 	input = transliterate(input);
 	// --- //
-	input = input.replace(/[^a-zA-Z', ]/gm,"");
+	input = input.replace(/-/gm,".");
+	input = input.replace(/[^a-zA-Z', \.]/gm,"");
 	//input = input.replace(/\(|\)|«|»|—|:/gm,"");
 	return input;
 }

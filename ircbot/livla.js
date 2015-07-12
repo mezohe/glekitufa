@@ -174,7 +174,7 @@ var updatexmldumps = function (callback) {
 				}
 				delete velruhe.cfari[thisa];
 				sutsisningau(thisa);
-				global.gc();
+				//global.gc();
 				if (callback && Object.keys(velruhe.cfari).length === 0) {
 					callback(velruhe);
 				}
@@ -478,8 +478,10 @@ var processormensi = function(clientmensi, from, to, text, message,source,socket
 		case text.indexOf(prereplier + "tatoget") == '0': tatoget();break;
 		case text==replier+': ii': benji(source,socket,clientmensi,sendTo, io());break;
 		case text==replier+': help': benji(source,socket,clientmensi,sendTo, sidju());break;
+		case text==replier+': labangu': benji(source,socket,clientmensi,sendTo, labangu());break;
 		case text.indexOf("rot13:") == '0': benji(source,socket,clientmensi,sendTo, rotpaci(text.substr(6)));break;
 		case text.indexOf(prereplier + 'r ') == '0': benji(source,socket,clientmensi,sendTo, rusko(text.substr(prereplier.length+1).trim()));break;
+		case text.indexOf(prereplier + 'gadri') == '0': benji(source,socket,clientmensi,sendTo, 'lo [PA] broda = zo\'e noi ke\'a broda [gi\'e zilkancu li PA lo broda]\nla [PA] broda = zo\'e noi lu [PA] broda li\'u cmene ke\'a mi\nlo PA sumti = lo PA me sumti\nla PA sumti = zo\'e noi lu PA sumti li\'u cmene ke\'a mi\nloi [PA] broda = lo gunma be lo [PA] broda\nlai [PA] broda = lo gunma be la [PA] broda\nloi PA sumti = lo gunma be lo PA sumti\nlai PA sumti = lo gunma be la PA sumti\nlo\'i [PA] broda = lo selcmi be lo [PA] broda\nla\'i [PA] broda = lo selcmi be la [PA] broda\nlo\'i PA sumti = lo selcmi be lo PA sumti\nla\'i PA sumti = lo selcmi be la PA sumti\nPA sumti = PA da poi ke\'a me sumti\nPA broda = PA da poi broda\npiPA sumti = lo piPA si\'e be pa me sumti');break;
 		case text.indexOf(prereplier + 'j ') == '0': benji(source,socket,clientmensi,sendTo, jbopomofo(text.substr(prereplier.length+1).trim()));break;
 		case text.indexOf('Tatoeba:') == '0': benji(source,socket,clientmensi,sendTo, sisku(text.substr(8).trim()));break;
 		case text.indexOf(prereplier) == '0': text = text.substr(prereplier.length+1).trim();benji(source,socket,clientmensi,sendTo, mensimikce(text));break;
@@ -759,7 +761,7 @@ return lin.replace(/&quot;/g,"'");
 var mulno = function (lin,lng,xmlDoc)
 {
 lin=lin.replace(/\"/g,'');var xo;
-if (typeof xmlDoc==='undefined'){
+if (typeof xmlDoc==="undefined"){
 	if (lng==="en"){xmlDoc=xmlDocEn;}else{xmlDoc = libxmljs.parseXml(fs.readFileSync(path.join(__dirname,"dumps",lng + ".xml"),{encoding: 'utf8'}));}
 }
 	
@@ -795,7 +797,7 @@ if (typeof coun!=='undefined'){
 	ien='.i lu ' + lin + ' li\'u cmavo zo\'oi ' + coun.text();
 	var cll= require('./cll.js');
 	var cllarr = cll.cllk()[coun.text()];
-	if (typeof(cllarr)!==undefined){ien+= "\n" + cllarr.replace(/ /g,"\n")}
+	if (typeof cllarr !== 'undefined'){ien+= "\n" + cllarr.replace(/ /g,"\n")}
 }
 	try{var ali = xmlDocEn.find("/dictionary/direction[1]/valsi[starts-with(translate(./selmaho,\""+lin.toUpperCase()+"\",\""+lin+"\"),\""+lin+"\")]");
 	var stra=[];
@@ -990,11 +992,13 @@ var items = [
 	["za'a","as-I-ca-see"],["za'adai","as-you-can-see"],["pu","in-past"],["ba","in-future"],["vau","]"],["doi","oh"],["uinai","unfortunately"],["u'u","sorry"],
 	["ko","do-it-so-that-you"],["poi","that"],["noi",",which"],["me","among"],
 	//["bakni","is-a-cow"],
+	["mlatu@n","cat"],["dansu@n","dancer(s)"],["klama@n","comer"],
+	["slabu","is-familiar-to"],["dansu","dance(s)"],["mlatu","is-a-cat"],["klama","come(s)"],
 	["pe'i","in-my-opinion"],["ui","yay"],["uinai","unfortunately"],
 	["ju","whether-or-not"],["gu","whether-or-not"],["gi'u","whether-or-not"],["u","whether-or-not"],
 	["xu","is-it-true-that"],["xunai","isnt-it-so-that"],["ka'e","possibly-can"],
 	["re'u","time"],["roi","times"],
-	["pa'o","through"],
+	["pa'o","through"],["co'a","become"],
 	["mi","me"]//dont copy
 	];
 var itemsu = [//universal glosses
@@ -1007,14 +1011,18 @@ lin=lin.toLowerCase();
 	try{
 		//from lojban to gloso
 		
-		if (check!==1){lin=run_camxes(lin.replace(/[^a-z'\. ]/g,''),5).replace(/[^a-z'\. ]/g,'').trim().replace(/ ([nd]ai)( |$)/img,"$1$2");}
+		if (check!==1){lin=run_camxesalta(lin.replace(/[^a-z'\. ]/g,''),2).replace(/h/g,"H").replace(/NF/g,"@nf").replace(/\bKU\b/g,"@ku").replace(/[^a-z@'\. ]/g,'').replace(/ {2,}/g," ").replace(/ ([nd]ai)( |$)/img,"$1$2").replace(/ @nf @ku\b/g,"@n").replace(/ @nf\b/g,"").trim();}
+		console.log(lin);
 		lin=lin.split(" ");
 		for (i=0;i<lin.length;i++){
 		//if (xucmavo(lin[i])===true & check===1){}else{
-					if (lng==='en'){//items are only for English. Think of some universla items.
+					if (lng==='en'){//items are only for English. Think of some universal items.
 					for (j=0;j<items.length;j++){
 						myregexp = new RegExp("^"+items[j][0]+"$", "gim");
 						if (lin[i].match(myregexp)!==null){
+								lin[i]=items[j][1].replace(/$/gm,"%%%");
+						}
+						else if(lin[i].replace(/@n$/,"").match(myregexp)!==null){//if noun not found
 								lin[i]=items[j][1].replace(/$/gm,"%%%");
 						}
 					}
@@ -1025,6 +1033,7 @@ lin=lin.toLowerCase();
 								lin[i]=itemsu[j][1].replace(/$/gm,"%%%");
 						}
 					}
+					lin[i]=lin[i].replace(/@n$/,"");
 			var cnt = xmlDoc.get("/dictionary/direction[1]/valsi[translate(@word,\""+lin[i].toUpperCase()+"\",\""+lin[i]+"\")=\""+lin[i]+"\"]/glossword[1]");
 			if (typeof cnt==='undefined'){cnt = xmlDoc.get("/dictionary/direction[1]/valsi[translate(@word,\""+lin[i].toUpperCase()+"\",\""+lin[i]+"\")=\""+lin[i]+"\"]/keyword[@place=\"1\"]");}//try keyword
 			if (typeof cnt!=='undefined'){lin[i]=cnt.attr("word").value().replace(/ /gm,"-").replace(/$/gm,"%%%");}
@@ -1342,7 +1351,7 @@ var rev = xmlDoc.find("/dictionary/direction[1]/valsi");
 		try{pars+=",\"s\":\""+rev[i].find("selmaho[1]")[0].text().replace(/"/g,"'").replace("\\","\\\\")+"\"";}catch(err){}
 		try{pars+=",\"d\":\""+rev[i].find("definition[1]")[0].text().replace(/"/g,"'").replace("\\","\\\\")+"\"";}catch(err){}
 		try{pars+=",\"n\":\""+rev[i].find("notes[1]")[0].text().replace(/"/g,"'").replace("\\","\\\\")+"\"";}catch(err){}
-		try{pars+=",\"g\":\""+rev[i].find("glossword/@word").join(" ").replace(/ word='/g," ").replace(/'/g,"").replace(/"/g,"'").replace("\\","\\\\")+"\"";}catch(err){}
+		//try{pars+=",\"g\":\""+rev[i].find("glossword/@word").join(" ").replace(/ word='/g," ").replace(/'/g,"").replace(/"/g,"'").replace("\\","\\\\")+"\"";}catch(err){}
 		var ra=rev[i].find("rafsi//text()[1]");
 		if (xugismu(hi)===true){
 			ra.push(hi);
