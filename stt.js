@@ -35231,7 +35231,7 @@ var camxes = (function(){
           return cachedResult.result;
         }
         
-        var result0, result1, result2;
+        var result0, result1, result2, result3;
         var pos0, pos1, pos2;
         
         pos0 = pos;
@@ -35260,9 +35260,24 @@ var camxes = (function(){
               pos = pos2;
             }
             if (result1 !== null) {
-              result2 = parse_lojban_word();
+              pos2 = pos;
+              reportFailures++;
+              result2 = parse_cmevla();
+              reportFailures--;
+              if (result2 === null) {
+                result2 = "";
+              } else {
+                result2 = null;
+                pos = pos2;
+              }
               if (result2 !== null) {
-                result0 = [result0, result1, result2];
+                result3 = parse_lojban_word();
+                if (result3 !== null) {
+                  result0 = [result0, result1, result2, result3];
+                } else {
+                  result0 = null;
+                  pos = pos1;
+                }
               } else {
                 result0 = null;
                 pos = pos1;

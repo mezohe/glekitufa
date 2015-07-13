@@ -1645,7 +1645,7 @@ h = comma* ['hH] &nucleus {return "'";}
 
 digit = expr:(comma* [0123456789] !h !nucleus) {return _join(expr);}
 
-post_word = expr:(pause / !nucleus !slinkuhi lojban_word)  {return _join(expr);}
+post_word = expr:(pause / !nucleus !slinkuhi !cmevla lojban_word)  {return _join(expr);}
 
 pause = expr:(comma* space_char+ / EOF)  {return _join(expr);}
 
