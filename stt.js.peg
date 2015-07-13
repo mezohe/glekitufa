@@ -1599,7 +1599,7 @@ sibilant = expr:(c / s !x / (j / z) !n !liquid) {return _join(expr); }
 
 consonant = expr:(voiced / unvoiced / syllabic) {return expr;}
 
-syllabic = expr:(l / m / n / r) {return expr;}
+syllabic = expr:(l / m / n / r / q) {return expr;}
 
 voiced = expr:(b / d / g / j / v / z) {return expr;}
 
@@ -1612,6 +1612,8 @@ m = comma* [mM] !h !m !t {return "m";}
 n = comma* [nN] !h !n !affricate !p !b  {return "n";}
 
 r = comma* [rR] !h !r {return "r";}
+
+q = comma* [qQ] !h !q {return "q";}
 
 b = comma* [bB] !h !b !unvoiced {return "b";}
 

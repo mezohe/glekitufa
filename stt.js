@@ -560,6 +560,7 @@ var camxes = (function(){
         "m": parse_m,
         "n": parse_n,
         "r": parse_r,
+        "q": parse_q,
         "b": parse_b,
         "d": parse_d,
         "g": parse_g,
@@ -33167,6 +33168,9 @@ var camxes = (function(){
             result0 = parse_n();
             if (result0 === null) {
               result0 = parse_r();
+              if (result0 === null) {
+                result0 = parse_q();
+              }
             }
           }
         }
@@ -33666,6 +33670,89 @@ var camxes = (function(){
         }
         if (result0 !== null) {
           result0 = (function(offset) {return "r";})(pos0);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        
+        cache[cacheKey] = {
+          nextPos: pos,
+          result:  result0
+        };
+        return result0;
+      }
+      
+      function parse_q() {
+        var cacheKey = "q@" + pos;
+        var cachedResult = cache[cacheKey];
+        if (cachedResult) {
+          pos = cachedResult.nextPos;
+          return cachedResult.result;
+        }
+        
+        var result0, result1, result2, result3;
+        var pos0, pos1, pos2;
+        
+        pos0 = pos;
+        pos1 = pos;
+        result0 = [];
+        result1 = parse_comma();
+        while (result1 !== null) {
+          result0.push(result1);
+          result1 = parse_comma();
+        }
+        if (result0 !== null) {
+          if (/^[qQ]/.test(input.charAt(pos))) {
+            result1 = input.charAt(pos);
+            pos++;
+          } else {
+            result1 = null;
+            if (reportFailures === 0) {
+              matchFailed("[qQ]");
+            }
+          }
+          if (result1 !== null) {
+            pos2 = pos;
+            reportFailures++;
+            result2 = parse_h();
+            reportFailures--;
+            if (result2 === null) {
+              result2 = "";
+            } else {
+              result2 = null;
+              pos = pos2;
+            }
+            if (result2 !== null) {
+              pos2 = pos;
+              reportFailures++;
+              result3 = parse_q();
+              reportFailures--;
+              if (result3 === null) {
+                result3 = "";
+              } else {
+                result3 = null;
+                pos = pos2;
+              }
+              if (result3 !== null) {
+                result0 = [result0, result1, result2, result3];
+              } else {
+                result0 = null;
+                pos = pos1;
+              }
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset) {return "q";})(pos0);
         }
         if (result0 === null) {
           pos = pos0;
