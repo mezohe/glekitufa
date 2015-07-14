@@ -1440,9 +1440,10 @@ zohoi_word = non_space+ {return "~";}
 
 //___________________________________________________________________
 
-cmevla = expr:(snavla) { return ["cmevla", _join(expr)]; }
+cmevla = expr:(snavla / cipcme) { return ["cmevla", _join(expr)]; }
 
 snavla = ((h / consonant consonant consonant consonant) (nucleus / glide / h / consonant / digit)* &pause)
+cipcme = (any_syllable* !any_syllable (nucleus / glide / h / consonant / digit)+ any_syllable* &pause)
 
 //___________________________________________________________________
 
@@ -1530,7 +1531,7 @@ r_hyphen = expr:(r &consonant / n &r) { return _join(expr); }
 
 final_syllable = expr:(onset !y !stressed nucleus !cmevla &post_word) {return _join(expr);}
 
-zihevlas_syllable = expr:(onset !y !stressed nucleus liquid? consonant &pause) {return _join(expr);}
+zihevlas_syllable = expr:(onset !y !stressed nucleus consonant consonant? &pause) {return _join(expr);}
 
 stressed_syllable = expr:(&stressed syllable / syllable &stress) {return _join(expr);}
 
@@ -1556,9 +1557,11 @@ syllable = expr:(onset !y nucleus coda?) {return _join(expr);}
 //// FIX: preventing {bla'ypre} from being a valid lujvo
 consonantal_syllable = expr:(consonant !any_syllable syllabic &any_syllable) {return _join(expr);}
 
-coda = expr:(syllabic? consonant) &pause {return _join(expr);}
+coda = expr:(consonant consonant? &pause / consonant consonant &glide_onset / consonant &(glide_onset / consonantal_syllable)) {return _join(expr);}
 
 onset = expr:(h / consonant? glide / initial) {return _join(expr);}
+
+glide_onset = consonant glide
 
 nucleus = expr:(vowel / diphthong / y !nucleus) {return _join(expr);}
 
