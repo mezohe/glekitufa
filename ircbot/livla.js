@@ -1250,6 +1250,7 @@ var jvokatna = function (lujvoi){
 	tmp=tmp.replace(myregexpi,"$1 ");
 	tmp=tmp.replace(/y/g," ");
 	tmp=tmp.replace(/ +/g," ");
+	tmp=tmp.replace(/ '/g," ");
 return tmp.trim();
 };
 var rafyjongau = function (raf){//join given rafsi into a lujvo
